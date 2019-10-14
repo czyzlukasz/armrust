@@ -14,7 +14,7 @@ SECTIONS
     /*First, the stack pointer*/
     LONG(ORIGIN(RAM) + LENGTH(RAM));
     /*Then, the address of the reset vector*/
-    KEEP(*(.vector_table.reset_vector));
+    .vector_table.reset_vector;
   } > FLASH
 
   .text :
