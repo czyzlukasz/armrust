@@ -5,7 +5,7 @@ MEMORY
 }
 
 ENTRY(Reset);
-/*EXTERN(RESET_VECTOR);*/
+EXTERN(RESET_VECTOR);
 SECTIONS
 {
   . = 0x8000000;
@@ -30,5 +30,4 @@ SECTIONS
   {
 
   } > RAM
-
 }
