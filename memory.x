@@ -5,15 +5,22 @@ MEMORY
 }
 
 ENTRY(Reset);
+EXTERN(MSP);
 EXTERN(RESET_VECTOR);
+
+_estack = ORIGIN(RAM) + LENGTH(RAM);
+
 SECTIONS
 {
-  . = 0x8000000;
-  .vector_table ORIGIN(FLASH) :
+  .msp_start ORIGIN(FLASH) :
   {
-    /*First, the stack pointer*/
-    LONG(ORIGIN(RAM) + LENGTH(RAM));
-    /*Then, the address of the reset vector*/
+    /*Initial value of MSP*/
+    .msp_start;
+  } > FLASH
+
+  .vector_table.reset_vector :
+  {
+    /*Address of the reset vector*/
     .vector_table.reset_vector;
   } > FLASH
 
@@ -25,7 +32,8 @@ SECTIONS
   .rodata :
   {
 
-  } > RAM
+  } > FLASH
+
    .ARM.exidx :
   {
 

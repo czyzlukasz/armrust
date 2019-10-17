@@ -23,6 +23,10 @@ pub unsafe extern "C" fn Reset() -> ! {
     }
 }
 
+#[link_section = ".msp_start"]
+#[no_mangle]
+pub static MSP: usize = 0x20005000;
+
 //***Vector table***//
 #[link_section = ".vector_table.reset_vector"]
 #[no_mangle]
