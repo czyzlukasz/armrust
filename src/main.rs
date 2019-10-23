@@ -1,5 +1,6 @@
 #![no_std]
 #![no_main]
+#![feature(const_fn)]
 
 use core::panic::PanicInfo;
 
@@ -23,16 +24,40 @@ pub unsafe extern "C" fn Reset() -> ! {
     }
 }
 
-#[link_section = ".msp_start"]
-#[no_mangle]
-pub static MSP: usize = 0x20005000;
+#[repr(C)]
+pub union Vector{
+    vector_handler: unsafe extern "C" fn() -> !,
+    unused_vector: u32
+}
+
+impl Vector{
+    pub const fn handler(handler: unsafe extern "C" fn() -> !) -> Vector{
+        Vector{vector_handler: handler}
+    }
+    pub const fn unused() -> Vector{
+        Vector{unused_vector: 0}
+    }
+}
 
 //***Vector table***//
-#[link_section = ".vector_table.reset_vector"]
+#[link_section = ".vector_table"]
 #[no_mangle]
-pub static RESET_VECTOR: unsafe extern "C" fn() -> ! = Reset;
-
-
+pub static VECTOR_TABLE: [Vector; 14] = [
+    Vector::handler(Reset),
+    Vector::unused(),
+    Vector::unused(),
+    Vector::unused(),
+    Vector::unused(),
+    Vector::unused(),
+    Vector::unused(),
+    Vector::unused(),
+    Vector::unused(),
+    Vector::unused(),
+    Vector::unused(),
+    Vector::unused(),
+    Vector::unused(),
+    Vector::unused(),
+];
 
 #[panic_handler]
 fn panic(_panic: &PanicInfo) -> ! {
