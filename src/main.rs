@@ -1,6 +1,9 @@
 #![no_std]
 #![no_main]
 #![feature(const_fn)]
+#![feature(exclusive_range_pattern)]
+
+mod gpio;
 
 use core::panic::PanicInfo;
 
